@@ -51,7 +51,7 @@ const createLog = (id, style) => {
   if(style){
     log.style = style + "position:absolute; top:0%; left:0%";
   }
-  else log.style = "position:relative; top:0%; left:0%; color:white";
+  else log.style = "position:relative; top:0%; left: 95%;color:white";
 
     /* –––––––––––––––––––––––––––––––––– */
    /*            Prototyping             */
