@@ -1,6 +1,6 @@
 const Ship = {
   fuel:100,
-  fuelConsumptionRate:1.5,
+  fuelConsumptionRate:10,
   fuelProcessingRate:0.5,
   tractorBeam:0,
   hullHP: 100,
@@ -8,5 +8,8 @@ const Ship = {
   update:(property, value)=>{
     Ship[property] = value;
     hub.updateData();
+  },
+  tools:{
+    autopilot: new Autopilot()
   }
 }

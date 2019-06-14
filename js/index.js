@@ -3,18 +3,17 @@
 // renders all stars to the DOM
 const draw = () => {
   canvas.clear();
+  Object.keys(keyboardInput).forEach((k)=>{
+    if(keyboardInput[k] == true){
+      Ship.update('fuel',Ship.fuel - Ship.fuelConsumptionRate / Fps);
+    }
+  });
   stars.forEach((s)=>{
     if(keyboardInput.up){
       s.movementHandler("up");
     }
     if(keyboardInput.down){
       s.movementHandler("down");
-    }
-    if(keyboardInput.left){
-      s.movementHandler("left");
-    }
-    if(keyboardInput.right){
-      s.movementHandler("right");
     }
     if(keyboardInput.toggle){
       hub.toggle();
@@ -31,11 +30,21 @@ const draw = () => {
 // this is the main game method
 const update = () => {
   draw();
+  Object.keys(Ship.tools).forEach((t)=>{
+    Ship.tools[t].click();
+  });
+
+  if(Ship.fuel <= 0){
+    endGame();
+  }
+
 }
 
-const handleMouseMovement = (mousePositions) => {
-  verticalScroll = mousePositions[1];
-  horizontalScroll = mousePositions[0];
+const handleMouseMovement = (mousePositionsAltered, originalMousePositions) => {
+  verticalScroll = mousePositionsAltered[1];
+  horizontalScroll = mousePositionsAltered[0];
+  mouseX = originalMousePositions[0];
+  mouseY = originalMousePositions[1];
 }
 
 setupMouseTracking(handleMouseMovement, canvas.getWidth()/2, canvas.getHeight()/2);
@@ -49,3 +58,6 @@ gameUpdate(update, (fps)=>{
   fpsLog.write("FPS:" + fps);
   Fps = fps;
 });
+//
+// Ship.tools.autopilot.toggleEnabled();
+// hub.updateData();

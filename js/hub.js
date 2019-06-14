@@ -2,7 +2,7 @@ const refreshHubData = () => {
   return `
     <br>
     <p>Fuel: ${Ship.fuel.toString().substring(0, 7)} </p>
-
+    <p> Autopilot: </p> ${Ship.tools.autopilot.isEnabled()} </p>
   `;
 }
 

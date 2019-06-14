@@ -6,3 +6,6 @@ canvas.fillStyle='rgb(255,255,255)';
 let fpsLog = createLog('fpsLog');
 
 let Fps = 60;
+
+let mouseX = 0;
+let mouseY = 0;
