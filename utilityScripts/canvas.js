@@ -98,3 +98,7 @@ const gameUpdate = (updateCallback, fpsCallback) => {
 
   window.requestAnimationFrame(()=>gameUpdate(updateCallback, fpsCallback));
 }
+
+const endGame = (message) => {
+  console.log("game over");
+}

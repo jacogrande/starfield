@@ -18,8 +18,16 @@ let keyboardInput = {
   toggleCallback:()=>{}
 };
 
+let movementLock = false;
+const disableMovement = () => {
+  movementLock = true;
+}
+const enableMovement = () => {
+  movementLock = false;
+}
+
 // sets up mouse tracking with possible axis
-// {param} movementCallback - callback method that will be passed an array containing the x and y positions –– callback([x,y])
+// {param} movementCallback - callback method that will be passed an array containing the x and y positions –– callback([x,y], [original x,y])
 const setupMouseTracking = (movementCallback, xAxis, yAxis) => {
   // assigns an event listener to the document body
   document.body.onmousemove = (event) => {
@@ -33,24 +41,23 @@ const setupMouseTracking = (movementCallback, xAxis, yAxis) => {
       x = Math.sin((xAxis - x)/1000);
     }
 
-    movementCallback([x,y]);
-
+    movementCallback([x,y],[event.clientX, event.clientY]);
   }
 }
 
 let toggleLock = false;
 
 document.addEventListener("keydown",function(event){
-  if(event.keyCode == 87){ // up (W)
+  if(event.keyCode == 87 && !movementLock){ // up (W)
     keyboardInput.up = true;
   }
-  if(event.keyCode == 68){ // right (D)
+  if(event.keyCode == 68 && !movementLock){ // right (D)
     keyboardInput.right = true;
   }
-  if(event.keyCode == 83){ // down (S)
+  if(event.keyCode == 83 && !movementLock){ // down (S)
     keyboardInput.down = true;
   }
-  if(event.keyCode == 65){ // up (A)
+  if(event.keyCode == 65 && !movementLock){ // up (A)
     keyboardInput.left = true;
   }
   if(event.keyCode == 32){ // space
