@@ -1,16 +1,12 @@
 // setup
-const numStars = 500;
-let stars = new Array(numStars);
-for(let i = 0; i < numStars; i++){
-  stars[i] = new Star();
-}
-
 let focalLength = canvas.getWidth();
 let xCenter = canvas.getWidth()/2;
 let yCenter = canvas.getHeight()/2;
-let size = 1;
+let starSize = 1;
 let verticalScroll = 0;
 let horizontalScroll = 0;
+let harvestableStars = [];
+
 
 // create Star class
 function Star(){
@@ -19,18 +15,39 @@ function Star(){
   this.x = random(0, canvas.getWidth());
   this.y = random(0, canvas.getHeight());
   this.z = random(0, canvas.getWidth()) * 2;
+  this.appendedHub = null;
+
+  let scaleReducer = random(0.75, 1);
+
+  this.power = random(0, 1);
+  let color = "";
+  if(this.power < 0.25){
+    scaleReducer = random(1.5,2.5);
+    color = "225, 225, 150,"
+  }
+  else {
+    color = "255,255,255,";
+  }
+
 
   let alpha = canvas.getWidth() / this.z / 2;
-  const color = "255,255,255,";
 
   // setup
   let updatedX = 0;
   let updatedY = 0;
   let updatedSize = 0;
 
+  // get methods
+  this.getSize = ()=>{
+    return updatedSize;
+  }
+
   // render method
   // called once per update by draw method
   this.render = () => {
+    if(updatedSize > 20){
+      this.renderAura();
+    }
     alpha = canvas.getWidth() / this.z / 2;
     updatedX = (this.x - xCenter) * (focalLength / this.z);
     updatedX = updatedX + xCenter;
@@ -38,12 +55,21 @@ function Star(){
     updatedY = (this.y - yCenter) * (focalLength / this.z);
     updatedY = updatedY + yCenter;
 
-    updatedSize = size * (focalLength / this.z);
+    updatedSize = starSize * (focalLength / this.z) / scaleReducer;
 
     canvas.beginPath();
     canvas.fillStyle = "rgb(" + color + alpha + ")";
     canvas.arc(updatedX, updatedY, updatedSize, 0, Math.PI*2);
     canvas.fill();
+  }
+
+  this.renderAura = () => {
+    canvas.beginPath();
+    canvas.strokeStyle = "rgba(43, 191, 212,0.8)";
+    // canvas.strokeStyle = "rgb(162, 57, 126)";
+    canvas.lineWidth = 10;
+    canvas.arc(updatedX, updatedY, updatedSize, 0, Math.PI*2);
+    canvas.stroke();
   }
 
   // move method
@@ -96,4 +122,11 @@ function Star(){
     }
   }
 
+}
+
+// initialization
+const numStars = 500;
+let stars = new Array(numStars);
+for(let i = 0; i < numStars; i++){
+  stars[i] = new Star();
 }
