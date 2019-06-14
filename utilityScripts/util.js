@@ -13,7 +13,9 @@ let keyboardInput = {
   right: false,
   down: false,
   left: false,
-  space: false
+  space: false,
+  toggle: false,
+  toggleCallback:()=>{}
 };
 
 // sets up mouse tracking with possible axis
@@ -36,6 +38,8 @@ const setupMouseTracking = (movementCallback, xAxis, yAxis) => {
   }
 }
 
+let toggleLock = false;
+
 document.addEventListener("keydown",function(event){
   if(event.keyCode == 87){ // up (W)
     keyboardInput.up = true;
@@ -49,8 +53,15 @@ document.addEventListener("keydown",function(event){
   if(event.keyCode == 65){ // up (A)
     keyboardInput.left = true;
   }
-  if(event.keyCode == 32){
+  if(event.keyCode == 32){ // space
     keyboardInput.space = true;
+  }
+  if(event.keyCode == 84){ // t
+    if(!toggleLock){
+      // console.log(keyboardInput.toggleCallback);
+      keyboardInput.toggleCallback();
+      toggleLock = true;
+    }
   }
 });
 
@@ -69,5 +80,8 @@ document.addEventListener("keyup",function(event){
   }
   if(event.keyCode == 32){
     keyboardInput.space = false;
+  }
+  if(event.keyCode == 84){
+    toggleLock = false;
   }
 });
