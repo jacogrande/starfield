@@ -5,7 +5,7 @@ let yCenter = canvas.getHeight()/2;
 let starSize = 1;
 let verticalScroll = 0;
 let horizontalScroll = 0;
-let harvestableStars = [];
+let harvestableStar = null;
 
 
 // create Star class
@@ -25,10 +25,13 @@ function Star(){
     scaleReducer = random(1.5,2.5);
     color = "225, 225, 150,"
   }
-  else {
+  else if(this.power < 0.98) {
     color = "255,255,255,";
   }
-
+  else{
+    color = "162, 255, 252,";
+    scaleReducer = random(0.25,0.75);
+  }
 
   let alpha = canvas.getWidth() / this.z / 2;
 
@@ -64,6 +67,7 @@ function Star(){
   }
 
   this.renderAura = () => {
+    harvestableStar = this;
     canvas.beginPath();
     canvas.strokeStyle = "rgba(43, 191, 212,0.8)";
     // canvas.strokeStyle = "rgb(162, 57, 126)";
