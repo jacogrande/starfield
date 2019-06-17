@@ -80,6 +80,7 @@ const createLog = (id, style) => {
 let ss_fps = 0;
 let ss_inc = 0;
 let ss_lastCalledTime = performance.now();
+let gameRunning = true;
 
 const gameUpdate = (updateCallback, fpsCallback) => {
   // calls fpsCallback function every second, passing it the current fps
@@ -94,11 +95,14 @@ const gameUpdate = (updateCallback, fpsCallback) => {
     }
   }
   // calls the update callback function
-  updateCallback();
+  if(gameRunning){
+    updateCallback();
+  }
 
   window.requestAnimationFrame(()=>gameUpdate(updateCallback, fpsCallback));
 }
 
 const endGame = (message) => {
-  console.log("game over");
+  gameRunning = false;
+  console.log(message);
 }

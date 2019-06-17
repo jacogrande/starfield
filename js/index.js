@@ -35,9 +35,9 @@ const update = () => {
   });
 
   if(Ship.fuel <= 0){
-    endGame();
+    Ship.update('fuel',0);
+    endGame('game over');
   }
-
 }
 
 const handleMouseMovement = (mousePositionsAltered, originalMousePositions) => {
@@ -54,7 +54,7 @@ keyboardInput.toggleCallback = hub.toggle;
 // updateCallback: update method defined above
 // fpsCallback: arrow function that logs to fpsLog
 // sets global variable Fps equal to the current fps rate
-gameUpdate(update, (fps)=>{
+let gameFunct = gameUpdate(update, (fps)=>{
   fpsLog.write("FPS:" + fps);
   Fps = fps;
 });
