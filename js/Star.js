@@ -210,7 +210,6 @@ for(let i = 0; i < numStars; i++){
 
 
 const harvestStar = () => {
-  starLog.write("");
   let finalStarArray = [];
   harvestableStarArray.forEach((s)=>{
     if(mouseX > s.x - 250 && mouseX < s.x+s.getSize() + 100 && mouseY > s.y - 250 && mouseY < s.y+s.getSize()+100){
