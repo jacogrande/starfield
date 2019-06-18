@@ -49,13 +49,17 @@ const createLog = (id, style) => {
 
   // style
   if(style){
-    log.style = style + "position:absolute; top:0%; left:0%";
+    log.style = style;
   }
   else log.style = "position:relative; top:0%; left: 95%;color:white";
 
     /* –––––––––––––––––––––––––––––––––– */
    /*            Prototyping             */
   /* –––––––––––––––––––––––––––––––––– */
+
+  log.addStyle = (styleString)=>{
+    log.style = style+styleString;
+  }
 
   // replaces logs text
   log.write = (message) => {

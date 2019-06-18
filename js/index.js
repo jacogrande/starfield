@@ -48,7 +48,9 @@ const handleMouseMovement = (mousePositionsAltered, originalMousePositions) => {
 }
 
 setupMouseTracking(handleMouseMovement, canvas.getWidth()/2, canvas.getHeight()/2);
+
 keyboardInput.toggleCallback = hub.toggle;
+keyboardInput.spaceCallback = harvestStar;
 
 // start game loop
 // updateCallback: update method defined above

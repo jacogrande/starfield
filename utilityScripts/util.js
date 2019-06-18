@@ -13,7 +13,7 @@ let keyboardInput = {
   right: false,
   down: false,
   left: false,
-  space: false,
+  spaceCallback: ()=>{},
   toggle: false,
   toggleCallback:()=>{}
 };
@@ -46,6 +46,7 @@ const setupMouseTracking = (movementCallback, xAxis, yAxis) => {
 }
 
 let toggleLock = false;
+let spaceLock = false;
 
 document.addEventListener("keydown",function(event){
   if(event.keyCode == 87 && !movementLock){ // up (W)
@@ -61,7 +62,10 @@ document.addEventListener("keydown",function(event){
     keyboardInput.left = true;
   }
   if(event.keyCode == 32){ // space
-    keyboardInput.space = true;
+    if(!spaceLock){
+      keyboardInput.spaceCallback();
+      spaceLock = true;
+    }
   }
   if(event.keyCode == 84){ // t
     if(!toggleLock){
@@ -86,7 +90,7 @@ document.addEventListener("keyup",function(event){
     keyboardInput.left = false;
   }
   if(event.keyCode == 32){
-    keyboardInput.space = false;
+    spaceLock = false;
   }
   if(event.keyCode == 84){
     toggleLock = false;

@@ -1,7 +1,7 @@
 const Ship = {
-  fuel:100,
+  fuel:200,
   fuelConsumptionRate:10,
-  fuelProcessingRate:0.5,
+  fuelProcessingRate:0.15,
   tractorBeam:0,
   hullHP: 100,
   speed:5,

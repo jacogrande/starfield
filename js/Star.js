@@ -6,6 +6,7 @@ let starSize = 1;
 let verticalScroll = 0;
 let horizontalScroll = 0;
 let harvestableStar = null;
+let harvestableStarArray = [];
 
 
 // create Star class
@@ -34,24 +35,45 @@ function Star(){
   }
 
   let alpha = canvas.getWidth() / this.z / 2;
+  let alphaMod = 0;
 
   // setup
   let updatedX = 0;
   let updatedY = 0;
   let updatedSize = 0;
+  let resetting = false;
+  this.harvested = false;
 
   // get methods
   this.getSize = ()=>{
     return updatedSize;
   }
 
+  this.getColor = ()=>{
+    return color;
+  }
+
   // render method
   // called once per update by draw method
   this.render = () => {
-    if(updatedSize > 20){
-      this.renderAura();
+    if(this.z > 0 && this.z < 30
+      && this.x > canvas.getWidth()/3 && this.x < canvas.getWidth()*2/3
+      && this.y > canvas.getHeight()/3 && this.y < canvas.getHeight()*2/3){
+      if(harvestableStarArray.indexOf(this) == -1){
+        harvestableStarArray.push(this);
+      }
+
+      if(mouseX > this.x - 100 && mouseX < this.x+updatedSize + 100 && mouseY > this.y - 250 && mouseY < this.y+updatedSize+100){
+        this.renderAura();
+        harvestableStar = this;
+      }
+
     }
-    alpha = canvas.getWidth() / this.z / 2;
+    else{
+      if(harvestableStarArray.indexOf(this) != -1){
+        harvestableStarArray.splice(harvestableStarArray.indexOf(this),1);
+      }
+    }
     updatedX = (this.x - xCenter) * (focalLength / this.z);
     updatedX = updatedX + xCenter;
 
@@ -60,8 +82,19 @@ function Star(){
 
     updatedSize = starSize * (focalLength / this.z) / scaleReducer;
 
+    if(resetting){
+      alpha = 1;
+      alphaMod+=0.01;
+      if(alpha <= 0){
+        reset();
+      }
+    }
+    else{
+      alpha = canvas.getWidth() / this.z / 2;
+    }
+
     canvas.beginPath();
-    canvas.fillStyle = "rgb(" + color + alpha + ")";
+    canvas.fillStyle = "rgba(" + color + (alpha-alphaMod) + ")";
     canvas.arc(updatedX, updatedY, updatedSize, 0, Math.PI*2);
     canvas.fill();
   }
@@ -69,11 +102,52 @@ function Star(){
   this.renderAura = () => {
     harvestableStar = this;
     canvas.beginPath();
-    canvas.strokeStyle = "rgba(43, 191, 212,0.8)";
-    // canvas.strokeStyle = "rgb(162, 57, 126)";
+    canvas.strokeStyle = "rgb(162, 57, 126)";
     canvas.lineWidth = 10;
     canvas.arc(updatedX, updatedY, updatedSize, 0, Math.PI*2);
     canvas.stroke();
+  }
+
+  const reset = () => {
+    // default position assigned randomly
+    this.x = random(0, canvas.getWidth());
+    this.y = random(0, canvas.getHeight());
+    this.z = random(0, canvas.getWidth()) * 2;
+    this.appendedHub = null;
+
+    scaleReducer = random(0.75, 1);
+
+    this.power = random(0, 1);
+    if(this.power < 0.25){
+      scaleReducer = random(1.5,2.5);
+      color = "225, 225, 150,"
+    }
+    else if(this.power < 0.98) {
+      color = "255,255,255,";
+    }
+    else{
+      color = "162, 255, 252,";
+      scaleReducer = random(0.25,0.75);
+    }
+
+    alpha = canvas.getWidth() / this.z / 2;
+
+    // setup
+    updatedX = 0;
+    updatedY = 0;
+    updatedSize = 0;
+    resetting = false;
+    this.harvested = false;
+  }
+
+  this.getHarvestValue = () => {
+    return 100 * scaleReducer * this.power;
+  }
+
+  this.harvest = () => {
+    resetting = true;
+    this.harvested = true;
+    return 100 * scaleReducer * this.power * Ship.fuelProcessingRate;
   }
 
   // move method
@@ -125,7 +199,6 @@ function Star(){
       move(0, -Ship.speed);
     }
   }
-
 }
 
 // initialization
@@ -133,4 +206,32 @@ const numStars = 500;
 let stars = new Array(numStars);
 for(let i = 0; i < numStars; i++){
   stars[i] = new Star();
+}
+
+
+const harvestStar = () => {
+  starLog.write("");
+  let finalStarArray = [];
+  harvestableStarArray.forEach((s)=>{
+    if(mouseX > s.x - 250 && mouseX < s.x+s.getSize() + 100 && mouseY > s.y - 250 && mouseY < s.y+s.getSize()+100){
+      finalStarArray.push(s);
+    }
+  });
+
+  let superiorStar = finalStarArray[0];
+  finalStarArray.forEach((s)=>{
+    if(s.z > superiorStar.z){
+      superiorStar = s;
+    }
+    else{
+      s.harvest();
+    }
+  });
+
+  if(superiorStar instanceof Star){
+    if(!superiorStar.harvested){
+      Ship.update('fuel', Ship.fuel + superiorStar.harvest());
+    }
+  }
+
 }
